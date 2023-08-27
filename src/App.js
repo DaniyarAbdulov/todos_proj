@@ -1,50 +1,45 @@
-import "./App.css";
+import React from "react";
 import { useState } from "react";
-import { TodoList } from "./components/TodoList";
-import { InputField } from "./components/InputField";
+import Header from "./components/Header/Header";
+import TodoList from "./components/TodoList";
+import InputField from "./components/InputField";
+import { ThemeProvider } from "@emotion/react";
+import theme from "./styles";
+import { Box, Stack } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { AddTodo } from "./store/todoSlice";
 
-function App() {
-  const [todos, setTodos] = useState([]);
-  const [text, setText] = useState("");
-  const addTodo = () => {
-    if (text.trim().length) {
-      setTodos([
-        ...todos,
-        {
-          id: new Date().toISOString(),
-          text,
-          comleted: false,
-        },
-      ]);
-      setText(" ");
-    }
-  };
-  const removeTodo = (todoId) => {
-    setTodos(todos.filter((todo) => todo.id !== todoId));
-  };
+const App = () => {
+  const [text, setText] = useState(" ");
+  const dispatch = useDispatch();
 
-  const toggleTodoCompleted = (todoId) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id !== todoId) return todo;
-        return {
-          ...todo,
-          comleted: !todo.comleted,
-        };
-      })
-    );
+  const addTask = () => {
+    dispatch(AddTodo({ text }));
+    setText(" ");
   };
 
   return (
-    <div className="App">
-      <InputField text={text} handleInput={setText} handleSubmit={addTodo}/>
-      <TodoList
-        todos={todos}
-        toggleTodoCompleted={toggleTodoCompleted}
-        removeTodo={removeTodo}
-      />
-    </div>
+    <ThemeProvider theme={theme}>
+      <Stack sx={{ alignItems: "center", margin: 10 }}>
+        <Header />
+        <Box
+          sx={{
+            boxShadow: 1,
+            p: 4,
+            minWidth: 300,
+            backgroundColor: "whitesmoke",
+          }}
+        >
+          <InputField
+            text={text}
+            handleInput={setText}
+            handleSubmit={addTask}
+          />
+          <TodoList />
+        </Box>
+      </Stack>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;

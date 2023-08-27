@@ -1,17 +1,22 @@
 import React from 'react'
+import { ListItem, Checkbox, ListItemButton, ListItemText } from '@mui/material'
+import { useDispatch } from 'react-redux';
+import { removeTodo, toggleTodoCompleted } from '../store/todoSlice';
 
-export const TodoItem = ({id, text, completed, toggleTodoCompleted, removeTodo}) => {
+const TodoItem = ({ id, text, completed }) => {
+  const dispatch = useDispatch();
   return (
-    <li>
-        <input
-              type="checkbox"
-              checked={completed}
-              onChange={() => toggleTodoCompleted(id)}
-            />
-            <span>{text}</span>
-            <span className="delete" onClick={() => removeTodo(id)}>
-              &times;
-            </span>
-    </li>
+    <ListItem>
+      <Checkbox
+        checked={completed}
+        onChange={() => dispatch(toggleTodoCompleted({ id }))}
+      />
+      <ListItemText primary={text}></ListItemText>
+      <ListItemButton onClick={() => dispatch(removeTodo({ id }))}>
+        &times;
+      </ListItemButton>
+    </ListItem>
   )
 }
+
+export default TodoItem 
