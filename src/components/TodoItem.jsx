@@ -3,7 +3,7 @@ import { ListItem, Checkbox, ListItemButton, ListItemText } from '@mui/material'
 import { useDispatch } from 'react-redux';
 import { removeTodo, toggleTodoCompleted } from '../store/todoSlice';
 
-const TodoItem = ({ id, text, completed }) => {
+const TodoItem = ({ id, title, completed }) => {
   const dispatch = useDispatch();
   return (
     <ListItem>
@@ -11,10 +11,13 @@ const TodoItem = ({ id, text, completed }) => {
         checked={completed}
         onChange={() => dispatch(toggleTodoCompleted({ id }))}
       />
-      <ListItemText primary={text}></ListItemText>
-      <ListItemButton onClick={() => dispatch(removeTodo({ id }))}>
+      <ListItemText primary={title}></ListItemText>
+      <div>
+              <ListItemButton onClick={() => dispatch(removeTodo({ id }))}>
         &times;
       </ListItemButton>
+      </div>
+
     </ListItem>
   )
 }

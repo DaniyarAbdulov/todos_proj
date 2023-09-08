@@ -1,22 +1,27 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header/Header";
 import TodoList from "./components/TodoList";
 import InputField from "./components/InputField";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./styles";
-import { Box, Stack } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { AddTodo } from "./store/todoSlice";
+import { Box, CircularProgress, Stack } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { AddTodo, fetchTodos } from "./store/todoSlice";
 
 const App = () => {
   const [text, setText] = useState(" ");
+  const {status, error} = useSelector(state => state.todos);
   const dispatch = useDispatch();
 
   const addTask = () => {
     dispatch(AddTodo({ text }));
     setText(" ");
   };
+
+    useEffect(() => {
+      dispatch(fetchTodos());
+    }, [dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -30,11 +35,16 @@ const App = () => {
             backgroundColor: "whitesmoke",
           }}
         >
+          <div style={{display:'flex', justifyContent:'center'}}>
           <InputField
             text={text}
             handleInput={setText}
             handleSubmit={addTask}
           />
+          </div>
+          {status === 'loading' && <h2><CircularProgress/></h2>}
+          {error && <h2>an Error:{error}</h2>}
+          
           <TodoList />
         </Box>
       </Stack>
